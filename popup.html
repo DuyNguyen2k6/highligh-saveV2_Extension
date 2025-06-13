@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title data-i18n="appName"></title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+  <link href="style.css" rel="stylesheet"/>
+</head>
+<body class="popup-body">
+  <div class="header">
+    <h1 data-i18n="savedNotes">📝 Ghi chú đã lưu</h1>
+    <div class="button-group">
+      <button class="create-note-button" id="createNoteBtn" data-i18n="createNoteButton">Tạo ghi chú</button>
+      <button class="create-note-button" id="exportJsonBtn" data-i18n="exportJsonButton">Xuất JSON</button>
+      <button class="create-note-button" id="importJsonBtn" data-i18n="importJsonButton">Nhập JSON</button>
+      <input accept=".json" id="fileInput" style="display: none;" type="file"/>
+    </div>
+  </div>
+
+  <!-- Khung nhập ghi chú mới -->
+  <div class="new-note-container" id="newNoteContainer" style="display: none;">
+    <textarea class="new-note-textarea" id="newNoteText" placeholder="" data-i18n-placeholder="newNotePlaceholder"></textarea>
+    <div class="edit-button-container">
+      <button class="save-button" id="saveNewNoteBtn" data-i18n="saveButton">Lưu</button>
+      <button class="cancel-button" id="cancelNewNoteBtn" data-i18n="cancelButton">Hủy</button>
+    </div>
+  </div>
+  <!-- End khung nhập ghi chú mới -->
+
+  <div class="tabs-container">
+    <div class="tab-buttons">
+      <button class="tab-button active" id="textTabBtn" data-i18n="textTab">Văn bản</button>
+      <button class="tab-button" id="imageTabBtn" data-i18n="imageTab">Ảnh</button>
+    </div>
+    <div class="tab-content">
+      <div class="tab-pane active" id="textTab">
+        <ul id="textNoteList"></ul>
+      </div>
+      <div class="tab-pane" id="imageTab">
+        <ul id="imageNoteList"></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Context Menu -->
+  <div id="customContextMenu" class="custom-context-menu" style="display:none;">
+    <ul id="contextMenuList"></ul>
+  </div>
+
+  <!-- Toast notification -->
+  <div id="toast" class="toast" style="display:none;">Đã sao chép!</div>
+
+  <!-- Modal xác nhận xóa với Glassmorphism -->
+  <div class="modal" id="deleteModal" style="display: none;">
+    <div class="modal-content">
+      <p id="deleteMessage"></p>
+      <div class="modal-buttons">
+        <button class="save-button" id="confirmDeleteBtn" data-i18n="deleteButton">Xóa</button>
+        <button class="cancel-button" id="cancelDeleteBtn" data-i18n="cancelButton">Hủy</button>
+      </div>
+    </div>
+  </div>
+  <!-- Modal chọn thêm hay thay thế khi nhập JSON -->
+<div class="modal" id="importChoiceModal" style="display: none;">
+  <div class="modal-content">
+    <p>Bạn muốn thêm hay thay thế nội dung?</p>
+    <div class="modal-buttons">
+      <button class="save-button" id="addImportBtn">Thêm</button>
+      <button class="cancel-button" id="replaceImportBtn">Thay thế</button>
+    </div>
+  </div>
+</div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
