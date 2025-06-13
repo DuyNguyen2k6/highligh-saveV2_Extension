@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Highlight & Save",
+  "name": "NoteSAVE",
   "version": "1.9",
   "description": "Highlight text and save notes.",
   "default_locale": "en",
