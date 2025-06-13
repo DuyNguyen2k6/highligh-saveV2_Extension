@@ -1,0 +1,83 @@
+{
+  "appName": {
+    "message": "Đánh dấu & Lưu"
+  },
+  "savedNotes": {
+    "message": "📝 Ghi chú đã lưu"
+  },
+  "createNoteButton": {
+    "message": "Tạo ghi chú"
+  },
+  "exportJsonButton": {
+    "message": "Xuất JSON"
+  },
+  "importJsonButton": {
+    "message": "Nhập JSON"
+  },
+  "newNotePlaceholder": {
+    "message": "Nhập ghi chú của bạn ở đây..."
+  },
+  "saveButton": {
+    "message": "Lưu"
+  },
+  "cancelButton": {
+    "message": "Hủy"
+  },
+  "textTab": {
+    "message": "Văn bản"
+  },
+  "imageTab": {
+    "message": "Ảnh"
+  },
+  "copyButton": {
+    "message": "Sao chép"
+  },
+  "editButton": {
+    "message": "Chỉnh sửa"
+  },
+  "deleteButton": {
+    "message": "Xóa"
+  },
+  "copySuccess": {
+    "message": "Đã sao chép!"
+  },
+  "copyMultiSuccess": {
+    "message": "Đã sao chép {num} ghi chú!"
+  },
+  "noTextToCopy": {
+    "message": "Không có ghi chú văn bản để sao chép!"
+  },
+  "saveSuccess": {
+    "message": "Đã lưu ghi chú!"
+  },
+  "deleteConfirm": {
+    "message": "Bạn có chắc chắn muốn xóa ghi chú này?"
+  },
+  "deleteSuccess": {
+    "message": "Đã xóa ghi chú!"
+  },
+  "createSuccess": {
+    "message": "Đã tạo ghi chú mới!"
+  },
+  "jsonExportNoNotes": {
+    "message": "Không có ghi chú để xuất."
+  },
+  "jsonImportInvalidFile": {
+    "message": "File JSON không hợp lệ hoặc định dạng sai."
+  },
+  "jsonImportAddSuccess": {
+    "message": "Nhập JSON thành công (Thêm)!"
+  },
+  "jsonImportReplaceSuccess": {
+    "message": "Nhập JSON thành công (Thay thế)!"
+  },
+  "importChoiceTitle": {
+    "message": "Bạn muốn thêm hay thay thế nội dung?"
+  },
+  "addButton": {
+    "message": "Thêm"
+  },
+  "replaceButton": {
+    "message": "Thay thế"
+  }
+}

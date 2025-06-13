@@ -1,0 +1,83 @@
+{
+  "appName": {
+    "message": "Highlight & Save"
+  },
+  "savedNotes": {
+    "message": "📝 Saved Notes"
+  },
+  "createNoteButton": {
+    "message": "Create Note"
+  },
+  "exportJsonButton": {
+    "message": "Export JSON"
+  },
+  "importJsonButton": {
+    "message": "Import JSON"
+  },
+  "newNotePlaceholder": {
+    "message": "Enter your note here..."
+  },
+  "saveButton": {
+    "message": "Save"
+  },
+  "cancelButton": {
+    "message": "Cancel"
+  },
+  "textTab": {
+    "message": "Text"
+  },
+  "imageTab": {
+    "message": "Image"
+  },
+  "copyButton": {
+    "message": "Copy"
+  },
+  "editButton": {
+    "message": "Edit"
+  },
+  "deleteButton": {
+    "message": "Delete"
+  },
+  "copySuccess": {
+    "message": "Copied!"
+  },
+  "copyMultiSuccess": {
+    "message": "Copied {num} notes!"
+  },
+  "noTextToCopy": {
+    "message": "No text notes to copy!"
+  },
+  "saveSuccess": {
+    "message": "Saved note!"
+  },
+  "deleteConfirm": {
+    "message": "Are you sure you want to delete this note?"
+  },
+  "deleteSuccess": {
+    "message": "Deleted note!"
+  },
+  "createSuccess": {
+    "message": "Created new note!"
+  },
+  "jsonExportNoNotes": {
+    "message": "No notes to export."
+  },
+  "jsonImportInvalidFile": {
+    "message": "Invalid JSON file or format."
+  },
+  "jsonImportAddSuccess": {
+    "message": "Import successful (Add)!"
+  },
+  "jsonImportReplaceSuccess": {
+    "message": "Import successful (Replace)!"
+  },
+  "importChoiceTitle": {
+    "message": "Do you want to add or replace the content?"
+  },
+  "addButton": {
+    "message": "Add"
+  },
+  "replaceButton": {
+    "message": "Replace"
+  }
+}
