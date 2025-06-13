@@ -45,11 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const msg = chrome.i18n.getMessage(msgName);
       if(msg) el.setAttribute('placeholder', msg);
     });
-    // Modal delete confirm message
     deleteMessage.textContent = chrome.i18n.getMessage('deleteConfirm');
-    // Modal import choice message
     importChoiceModal.querySelector('p').textContent = chrome.i18n.getMessage('importChoiceTitle');
-    // Các nút modal import
     addImportBtn.textContent = chrome.i18n.getMessage('addButton');
     replaceImportBtn.textContent = chrome.i18n.getMessage('replaceButton');
   }
@@ -103,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Click trái toggle chọn nhiều ghi chú
       li.addEventListener('click', (e) => {
-        if (currentEditingIndex !== null) return; // không chọn khi đang sửa
+        if (currentEditingIndex !== null) return;
         e.preventDefault();
         if (selectedNoteIndexes.has(index)) {
           selectedNoteIndexes.delete(index);
@@ -120,18 +117,76 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         currentContextNoteIndex = index;
         const isSelected = selectedNoteIndexes.has(index);
-        showContextMenu(e.pageX, e.pageY, isSelected);
+
+        if (note.image) {
+          showImageContextMenu(e.pageX, e.pageY, index);
+        } else {
+          showTextContextMenu(e.pageX, e.pageY, isSelected);
+        }
       });
     });
   }
 
-  // Hiện menu chuột phải tùy theo đã chọn hay chưa
-  function showContextMenu(x, y, isSelected) {
+  // Menu chuột phải cho ảnh (Xóa + Lưu ảnh)
+  function showImageContextMenu(x, y, index) {
+    contextMenuList.innerHTML = '';
+
+    const deleteLi = document.createElement('li');
+    deleteLi.textContent = chrome.i18n.getMessage('deleteButton');
+    deleteLi.addEventListener('click', () => {
+      allNotes.splice(index, 1);
+      selectedNoteIndexes.delete(index);
+      currentEditingIndex = null;
+      chrome.storage.local.set({ notes: allNotes }, () => {
+        renderNotes(allNotes);
+        showToast(chrome.i18n.getMessage('deleteSuccess'));
+      });
+      hideContextMenu();
+    });
+
+    const saveLi = document.createElement('li');
+    saveLi.textContent = 'Lưu ảnh';
+    saveLi.addEventListener('click', () => {
+      const imgSrc = allNotes[index].image;
+      if (imgSrc) {
+        const a = document.createElement('a');
+        a.href = imgSrc;
+        a.download = `note_image_${index}.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        showToast('Đã lưu ảnh');
+      }
+      hideContextMenu();
+    });
+
+    contextMenuList.appendChild(deleteLi);
+    contextMenuList.appendChild(saveLi);
+
+    customContextMenu.style.top = y + 'px';
+    customContextMenu.style.left = x + 'px';
+    customContextMenu.style.display = 'block';
+
+    const rect = customContextMenu.getBoundingClientRect();
+    const popupRect = document.body.getBoundingClientRect();
+    if (rect.right > popupRect.right) {
+      customContextMenu.style.left = (x - (rect.right - popupRect.right)) + 'px';
+    }
+    if (rect.bottom > popupRect.bottom) {
+      customContextMenu.style.top = (y - (rect.bottom - popupRect.bottom)) + 'px';
+    }
+  }
+
+  // Menu chuột phải cho text (tuỳ theo số ghi chú được chọn)
+  function showTextContextMenu(x, y, isSelected) {
     contextMenuList.innerHTML = '';
 
     let options = [];
-    if (isSelected) {
+
+    if (selectedNoteIndexes.size > 1) {
       options = [chrome.i18n.getMessage('copyButton'), chrome.i18n.getMessage('deleteButton')];
+    } else if (selectedNoteIndexes.size === 1 && isSelected) {
+      options = [chrome.i18n.getMessage('copyButton'), chrome.i18n.getMessage('editButton'), chrome.i18n.getMessage('deleteButton')];
     } else {
       options = [chrome.i18n.getMessage('copyButton'), chrome.i18n.getMessage('editButton'), chrome.i18n.getMessage('deleteButton')];
     }
@@ -164,12 +219,11 @@ document.addEventListener('DOMContentLoaded', () => {
     customContextMenu.style.display = 'none';
   }
 
-  // Xử lý menu
+  // Xử lý menu chọn
   function handleContextMenuOption(option) {
     if (currentContextNoteIndex === null) return;
 
     if (option === chrome.i18n.getMessage('copyButton')) {
-      // Nếu nhiều ghi chú được chọn, sao chép tất cả văn bản trong selectedNoteIndexes
       if (selectedNoteIndexes.size > 0 && selectedNoteIndexes.has(currentContextNoteIndex)) {
         const texts = [];
         selectedNoteIndexes.forEach(idx => {
@@ -185,7 +239,6 @@ document.addEventListener('DOMContentLoaded', () => {
           showToast(chrome.i18n.getMessage('copyMultiSuccess').replace('{num}', texts.length));
         });
       } else {
-        // Nếu ghi chú chưa chọn hoặc không có ghi chú nào được chọn
         const note = allNotes[currentContextNoteIndex];
         if (note.text) {
           navigator.clipboard.writeText(note.text).then(() => {
@@ -194,12 +247,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
     } else if (option === chrome.i18n.getMessage('editButton')) {
-      if (!selectedNoteIndexes.has(currentContextNoteIndex)) {
-        currentEditingIndex = currentContextNoteIndex;
-        renderNotes(allNotes);
-      }
+      currentEditingIndex = currentContextNoteIndex;
+      renderNotes(allNotes);
     } else if (option === chrome.i18n.getMessage('deleteButton')) {
-      // Xóa tất cả ghi chú được chọn nếu ghi chú hiện tại nằm trong tập chọn
       if (selectedNoteIndexes.size > 0 && selectedNoteIndexes.has(currentContextNoteIndex)) {
         const indexesToDelete = Array.from(selectedNoteIndexes).sort((a,b) => b - a);
         indexesToDelete.forEach(idx => {
@@ -212,13 +262,12 @@ document.addEventListener('DOMContentLoaded', () => {
           showToast(chrome.i18n.getMessage('deleteSuccess'));
         });
       } else {
-        // Xóa ghi chú đơn
         openDeleteModal(currentContextNoteIndex);
       }
     }
   }
 
-  // Inline edit
+  // Inline chỉnh sửa
   function renderInlineEdit(text, container, index) {
     container.innerHTML = '';
     const textarea = document.createElement('textarea');
@@ -249,6 +298,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (newText) {
         allNotes[index].text = newText;
         currentEditingIndex = null;
+        selectedNoteIndexes.clear();
         chrome.storage.local.set({ notes: allNotes }, () => {
           renderNotes(allNotes);
           showToast(chrome.i18n.getMessage('saveSuccess'));
@@ -262,9 +312,8 @@ document.addEventListener('DOMContentLoaded', () => {
     };
   }
 
-  // Modal xóa
+  // Modal xác nhận xóa
   function openDeleteModal(index) {
-    // deleteMessage.textContent được set trong applyI18n()
     deleteModal.style.display = 'flex';
 
     confirmDeleteBtn.textContent = chrome.i18n.getMessage('deleteButton');
@@ -286,7 +335,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
   }
 
-  // Toast
+  // Toast hiển thị thông báo
   let toastTimeout;
   function showToast(message) {
     toast.textContent = message;
@@ -302,7 +351,7 @@ document.addEventListener('DOMContentLoaded', () => {
     hideContextMenu();
   });
 
-  // Tab chuyển đổi
+  // Chuyển tab văn bản/ảnh
   textTabBtn.addEventListener('click', () => {
     textTabBtn.classList.add('active');
     imageTabBtn.classList.remove('active');
@@ -422,4 +471,8 @@ document.addEventListener('DOMContentLoaded', () => {
     renderNotes(data.notes);
     applyI18n();
   });
+
+  function hideContextMenu() {
+    customContextMenu.style.display = 'none';
+  }
 });
